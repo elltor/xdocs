@@ -1,0 +1,36 @@
+# 工具日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 崩溃日志报告
+report\.*
+
+# VuePress files
+docs/.vuepress/.temp/
+docs/.vuepress/.cache/
+docs/.vuepress/dist/
+
+# Dist files
+lib/
+
+# Test temp files
+**/__fixtures__/.temp/
+
+# Test coverage files
+coverage/
+
+# Node modules
+node_modules/
+
+# MacOS Desktop Services Store
+.DS_Store
+
+# Log files
+*.log
+logs
+error_log
+out_log
+
+# Typescript build info
+*.tsbuildinfo
