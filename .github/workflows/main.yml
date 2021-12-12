@@ -4,32 +4,32 @@ name: Build app and deploy xDocs
 on:
   #监听push操作
   push:
-    branches:
-      # main分支，你也可以改成其他分支
-      - main
+    # main分支，你也可以改成其他分支
+    branches: [ main ]
+
 jobs:
   build:
     # runs-on 指定job任务运行所需要的虚拟机环境(必填字段)
     runs-on: ubuntu-latest
     steps:
       # 获取源码
-      - name: Checkout
+      - name: Checkout Branch 'main'
         # 使用action库  actions/checkout获取源码
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
       # 安装Node13
-      - name: use Node.js 15.4.0
+      - name: Use nodejs v15.4.0
         # 使用action库  actions/setup-node安装node
         uses: actions/setup-node@v1
         with:
           node-version: 15.4.0
       # 安装依赖
-      - name: npm install
+      - name: install NPM
         run: npm install
       # 打包
-      - name: npm build
+      - name: Build xdocs
         run: npm run build
       # 部署到服务器
-      - name: Deploy to Server # 第二步，rsync推文件
+      - name: Deploy to server # 第二步，rsync推文件
         uses: AEnterprise/rsync-deploy@v1.0 # 使用别人包装好的步骤镜像
         env:
           DEPLOY_KEY: ${{ secrets.XDOCS_ACTIONS_SECRET }} # 引用配置，SSH私钥
