@@ -71,7 +71,7 @@ module.exports = {
     editLinkPattern: ':repo/edit/:branch/:path', // 需要使用docsXXX信息
     docsRepo: 'https://github.com/elltor/xdocs',
     docsBranch: 'main',
-    docsDir:'docs',
+    docsDir: 'docs',
   },
   // 开启的插件
   plugins: [

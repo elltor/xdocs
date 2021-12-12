@@ -1,6 +1,6 @@
 # refer: https://bugbyebye.cn/pages/40daf7/
 # name 可以自定义
-name: Build app and deploy xDocs
+name: Build xDocs and deploy 
 on:
   #监听push操作
   push:
@@ -39,4 +39,3 @@ jobs:
           SERVER_IP: ${{ secrets.XDOCS_SERVER_IP }} # 引用配置，服务器的host名（IP或者域名domain.com）
           USERNAME: xdocs # 引用配置，服务器登录名
           SERVER_DESTINATION: ${{ secrets.XDOCS_SERVER_DESTINATION }} # 部署到目标文件夹
-
