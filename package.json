@@ -1,11 +1,7 @@
 {
-  "name": "vuepress-starter",
+  "name": "xdocs",
   "version": "1.0.0",
-  "description": "my docs",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "description": "xdocs is notebook.",
   "dependencies": {},
   "devDependencies": {
     "@vuepress/plugin-back-to-top": "^2.0.0-beta.27",
@@ -14,9 +10,9 @@
     "vuepress": "^2.0.0-beta.27"
   },
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs"
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
   },
   "author": "liuqichun",
-  "license": "ISC"
+  "license": "GPL-3.0 License"
 }
