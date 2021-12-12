@@ -1,5 +1,3 @@
----
-prev: java-1.md
----
 
-# Java 第二章
+# Java 第二篇
+

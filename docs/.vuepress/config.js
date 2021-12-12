@@ -1,3 +1,33 @@
+// 侧边栏配置
+const sliderConfig = [
+  {
+    text: '首页',
+    link: '/',
+  },
+  {
+    text: 'Java 总结',
+    link: '/java/',
+    children: [
+      '/java/java-1.md',
+      '/java/java-2.md',
+    ]
+  },
+  {
+    text: 'Netty 总结',
+    link: '/netty/',
+    children: [
+      '/netty/netty-series-1.md',
+      '/netty/netty-series-2.md',
+      '/netty/netty-series-3.md',
+      '/netty/netty-series-4.md',
+      '/netty/netty-series-5.md',
+      '/netty/netty-series-6.md',
+      '/netty/netty-series-7.md',
+    ]
+  }
+]
+
+
 // 系统配置
 module.exports = {
   base: '/',
@@ -41,26 +71,13 @@ module.exports = {
     ],
     // 导航栏
     navbar: [
-      /*{ text: 'Home', link: '/' },*/
+      { text: '首页', link: '/' },
       { text: 'My Blog', link: 'https://elltor.com' },
       { text: 'GitHub', link: 'https://github.com/elltor/xdocs' },
     ],
     // 侧边栏 显示深度&主页侧边栏
-    sidebarDepth: 3,
-    sidebar: [
-      {
-        text: '首页',
-        link: '/',
-      },
-      {
-        text: '第一章',
-        link: '/java/java-1.md',
-      },
-      {
-        text: '第二章',
-        link: '/java/java-2.md',
-      },
-    ],
+    sidebarDepth: 0,
+    sidebar: sliderConfig,
     // 源码仓库
     // 如果你按照 `organization/repository` 的格式设置它，会将它作为一个 GitHub 仓库
     //repo: 'elltor/xdocs',
