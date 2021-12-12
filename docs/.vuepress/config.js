@@ -9,7 +9,7 @@ module.exports = {
     logo: '/imgs/xdocs_logo.png',
     // 最后更新时间 开启&文案
     lastUpdated: true,
-    lastUpdatedText: '最近更新',
+    lastUpdatedText: '上次更新',
     // 贡献人 开启&文案
     contributors: true,
     contributorsText: '贡献者',

@@ -1,7 +1,7 @@
 {
   "name": "xdocs",
   "version": "1.0.0",
-  "description": "xdocs is notebook.",
+  "description": "xdocs is a notebook.",
   "main": "index.js",
   "directories": {
     "doc": "docs"
