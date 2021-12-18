@@ -54,8 +54,9 @@ String类的成员变量，从中可以窥见一斑。
     // 编码。由于容器是字节数组，不确定编码无法解码显示字符串
     private final byte coder;
     // 是字符串的哈希码，而不是String对象的，用作字符串缓存
-    private int hash; // Default to 0
-    // 是否压缩字符串存储。如果禁用字符串压缩，则value中的字节始终以 UTF16 编码。 对于具有多种可能实现方式的方法，当禁用字符串压缩时，只会采用一种方式：UTF16
+    private int hash; 
+    // 是否压缩字符串存储。如果禁用字符串压缩，则value中的字节始终以 UTF16 编码。 
+    // 对于具有多种可能实现方式的方法，当禁用字符串压缩时，只会采用一种方式：UTF16
     static final boolean COMPACT_STRINGS;
 ```
 
@@ -102,7 +103,7 @@ String类的核心构造器。
     }
 ```
 
-在JDK 8中字符串数据是存储在char数组中，而在JDK 11中变成byte数组，其中仍是char数据。因为存储不同字符串的长度获取方法也改变了。
+在JDK 8中字符串数据是存储在char数组中，而在JDK 11中变成byte数组，但其中仍是字符的数据。因为存储不同字符串的长度获取方法也改变了。
 
 ```java
     // JDK 8
@@ -125,7 +126,7 @@ String类的核心构造器。
     }
 ```
 
-获取不同编码方式指定字符位置使用不同的方式。
+获取不同编码方式指定字符位置也使用不同的方式。
 
 ```java
     public char charAt(int index) {
@@ -137,8 +138,122 @@ String类的核心构造器。
     }
 ```
 
+常用的 `replace`、`substring` 方法都生成新的字符串，而不是在原 String 对象中操作。
 
+```java
+    public String substring(int start, int end) {
+        checkRangeSIOOBE(start, end, count);
+        if (isLatin1()) {
+            // 生成新串
+            return StringLatin1.newString(value, start, end - start);
+        }
+        // 生成新串
+        return StringUTF16.newString(value, start, end - start);
+    }
 
+    public String replace(char oldChar, char newChar) {
+        if (oldChar != newChar) {
+            // StringLatin1.replace 替换后生成的新字符串
+            String ret = isLatin1() ? StringLatin1.replace(value, oldChar, newChar)
+                                    : StringUTF16.replace(value, oldChar, newChar);
+            if (ret != null) {
+                return ret;
+            }
+        }
+        return this;
+    }
+```
+
+## StringBuilder、SringBuffer分析
+
+### 类结构
+
+![](https://oss.elltor.com/uploads/xdocs/2021/StringBuilder.png)
+
+![](https://oss.elltor.com/uploads/xdocs/2021/StringBuffer.png)
+
+从类结构看二者继承实现结构相同，其中真正完成追加（append）操作的是 `AbstractStringBuilder` 类。
+
+### 源码分析
+
+先看StringBuilder常用的方法。
+
+```java
+    @Override
+    public StringBuilder append(Object obj) {
+        return append(String.valueOf(obj));
+    }
+
+    @Override
+    @HotSpotIntrinsicCandidate
+    public StringBuilder append(String str) {
+        super.append(str);
+        return this;
+    }
+
+    public StringBuilder append(StringBuffer sb) {
+        super.append(sb);
+        return this;
+    }
+```
+
+在看 StringBuffer 的方法，对比可以看到 StirngBuffer 方法都加了 `synchronized` 进行同步控制，因此 StringBuffer 是线程安全的字符串构建器，但由于同步具有额外开销性能则不如 StringBuilder。
+
+```java
+    @Override
+    public synchronized StringBuffer append(Object obj) {
+        toStringCache = null;
+        super.append(String.valueOf(obj));
+        return this;
+    }
+
+    @Override
+    @HotSpotIntrinsicCandidate
+    public synchronized StringBuffer append(String str) {
+        toStringCache = null;
+        super.append(str);
+        return this;
+    }
+
+    public synchronized StringBuffer append(StringBuffer sb) {
+        toStringCache = null;
+        super.append(sb);
+        return this;
+    }
+```
+
+## StringJoiner
+
+StringJoiner是字符串连接器，可以生成指定前缀、后缀、元素分隔符的字符串。示例：
+
+```java
+    StringJoiner sj = new StringJoiner(":", "[", "]");
+    sj.add("George").add("Sally").add("Fred");
+
+    // desiredString = "[George:Sally:Fred]"
+    String desiredString = sj.toString();
+```
+
+StringJoiner的核心方法, 这个方法并为使用同步措施不能在多线程的环境下使用。
+
+```java
+    public StringJoiner add(CharSequence newElement) {
+        final String elt = String.valueOf(newElement);
+        
+        if (elts == null) {// 为null初始化
+            elts = new String[8];
+        } else {// 检查容量，容量满进行扩容
+            if (size == elts.length)
+                elts = Arrays.copyOf(elts, 2 * size);
+            len += delimiter.length();
+        }
+        // 重新计算长度
+        len += elt.length();
+        // 存放
+        elts[size++] = elt;
+        return this;
+    }
+```
 
 参考：
 
