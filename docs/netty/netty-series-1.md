@@ -1,36 +1,33 @@
 
-# Netty系列｜开篇词
+# Netty系列｜Netty入门
 
-
-
-> 摘要：这是最近学习的一些成果，预计会有十几篇文章，我准备用通俗有趣的语言把它分享给你，让你学习Neety变的Easy，敬请期待。
+> 摘要：这是最近学习的一些成果，预计会有十几篇文章，我准备用通俗有趣的语言把它分享给你，敬请期待。
 
 当我们打开Netty官网，会看到一个赫然的标题。
 
 > Netty is an asynchronous event-driven network application framework for rapid development of maintainable high performance protocol servers & clients.
+> Netty是一个异步事件驱动网络编程框架，用于快速开发可维护的高性能协议服务器和客户端。
 
-译文：Netty是一个异步事件驱动网络编程框架，用于快速开发可维护的高性能协议服务器和客户端。
+从中我们提取一些重点词汇：异步、事件驱动、协议服务器。
 
-从中我们提取一些重点：异步、事件驱动、协议、服务器和客户端。
+没错，这就是Netty的特点，基于Reactor线程模型异步能力，基于epoll处理IO的能力，内置了许多协议处理器和编解码器，只需要简单编码就能实现高性能的服务器-客户端应用。
 
-没错，这就是Netty的特点，基于Reactor线程模型异步能力，基于epoll处理IO的能力，内置了许多协议处理器和编解码器，只需要简单配置，就能实现高性能的服务器-客户端应用。
+Netty发展十几年，Java生态许多高性能的中间件都是用了它，例如：Apache Flink、Apache Spark、Elastic Search等，这说明了Netty是优良网络编程框架。
 
-Netty发展十几年，Java生态许多高性能的中间件都是用了它，例如：Apache Flink、Apache Spark、Elastic Search等，这说明Netty是优良网络编程框架。
+> P.S. 你可以点击这个链接了解使用Netty的开源项目 <https://netty.io/wiki/related-projects.html>
 
-> P.S. 你可以点击这个链接了解使用Netty的开源项目 https://netty.io/wiki/related-projects.html
+### Netty的优点
 
-
-
-那么Netty有哪些优点呢？以下是几点（不是以上的特点）
+那么Netty有哪些优点呢？
 
 1. 基于Reactor模型
 2. 使用直接内存避免拷贝开销
 3. 提供了多种协议的编解码器，开箱即用
 4. 提供了测试工具、内存泄露检测工具等
 
+### Netty支持的协议
 
-
-单拿协议处理器来说，Netty实现了一下协议的处理器，开箱即用！
+单拿协议处理器来说，Netty实现了以下协议的处理器，做到了开箱即用！
 
 | 协议                 | 说明                                                         |
 | -------------------- | ------------------------------------------------------------ |
@@ -43,13 +40,9 @@ Netty发展十几年，Java生态许多高性能的中间件都是用了它，�
 | STOMP                | 一种简单消息传输协议                                         |
 | UDT                  | 基于UDP的可靠传输协议，现在已经废弃                          |
 
-
-
 相信到这里你已经有些心动了，当你使用Netty实现一个CS程序时你会不由地感叹Netty的强大与便捷。
 
-
-
-### Netty核心组件简介
+### Netty的核心组件
 
 * Channel：对应于网络的Socket，是一个双向管道，即可以写数据又可以读数据。
 * EventLoop：事件循环，每一个事件循环仅与一个线程绑定，用来处理epoll事件。
@@ -59,16 +52,8 @@ Netty发展十几年，Java生态许多高性能的中间件都是用了它，�
 * ChannelFeaure：代表channel处理的一个结果。
 * ChannelHandlerContext：处理器Handler的上下文，从中可以获取Channel，或者进行读写操作关闭链接等操作。
 
+### Netty能用来做什么
 
-
-### 网络编程的注意点有哪些？
-
-网络编程总是跟并发密切相关，当你写完第一个网络编程程序会有更加深刻的体会，第一个点是注意线程安全，防止数据出现不一致。
-
-第二点，数据传输安全，通常在没有SSL/TLS保护的应用程是不安全的。
-
-第三点，数据完整性，避免数据缺失等。
-
-
+世面上有很多中间件使用Netty做网络通信，Netty很擅长这个。如果你想做一个Websocket长连接或者HTTP服务器，Netty是一个选择；如果你想实现一个内网穿透工具或者代理工具，Netty也是一个很好的选择，它支持SOCKS协议能进行字节级数据控制。
 
 先到这里，Netty还有很多🐂技术，比如FastThreadLocal、Jemalloc等，下回见。

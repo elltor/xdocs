@@ -1,12 +1,7 @@
 
 # Netty系列｜echo详解
 
-
-
-
 > 摘要：这是一个简单的echo程序，它将接收你发过来的数据然后返回给你，通过这个echo程序能了解netty程序如何进行引导、基本组件情况。
-
-
 
 ### 程序清单
 
@@ -14,8 +9,6 @@
 * EchoServerHandler
 * EchoClient
 * EchoClientHandler
-
-
 
 ### 代码
 
@@ -86,8 +79,6 @@ public final class EchoServer {
 }
 ```
 
-
-
 **EchoServerHandler**
 
 ```java
@@ -143,8 +134,6 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
 
 }
 ```
-
-
 
 **EchoClient**
 
@@ -216,8 +205,6 @@ public final class EchoClient {
 }
 ```
 
-
-
 **EchoClientHandler**
 
 ```java
@@ -272,11 +259,7 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 }
 ```
 
-
-
 通过注释能了解netty运行的组件和开发模式，但可能还会有些疑问，看下面的问题。
-
-
 
 ### 问题
 
@@ -284,23 +267,14 @@ public class EchoClientHandler extends ChannelInboundHandlerAdapter {
 
 实际上server和client有很大的不同，client配置只需要一个连接一个线程就够了，而server需要配置多个；channel也有区别，server的channel 一方面与client建立连接（`accept`），另一方面处理client channel的读写事件。因为功能的差异，所以配置存在差异，就导致需要不同的引导器配置。
 
-
-
 2、为什么server有两个线程组（`EventLoopGroup`），而client只有一个
 
 server是可以只用一个线程组。这是netty线程模型的缘故，netty使用的是Reactor线程模型。
-
-
 
 3、Future
 
 `Future`是异步编程常见词汇，它代表了一个结果，这个结果会在未来的某个时刻发生，而功过`Future`能拿到这个结果。常见的是`ChannelFuture`，它表示了一个操作（如`bind`、监听关闭`closeFuture`）的结果。
 
-
-
 4、sync() 方法
 
 这个方法是一个同步方法，会阻塞上个操作，直到满足条件，例如：`closeFuture().sync()` 会阻塞到接收到关闭连接到信号到来。
-
-
-
