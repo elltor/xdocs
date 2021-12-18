@@ -44,25 +44,75 @@ str1 == str3 // false
 
 分析，字符串是不可变对象，在进行变更操作（e.g. substring、replace、concat）都会创建新字符串对象，因此JVM进行了优化，如果字符串常量池中国呢存在就返回不在创建，不存在创建在返回引用，如果是创建字符串对象，字符串对象变量必然是新的，其中的数据载体（byte[] value)可能是在常量池中。
 
-### 字符串的存储
+### 源码分析
 
-在JDK 8中字符串数据是存储在char数组中。
+String类的成员变量，从中可以窥见一斑。
 
 ```java
+    // 存储字符串容器
+    private final byte[] value;
+    // 编码。由于容器是字节数组，不确定编码无法解码显示字符串
+    private final byte coder;
+    // 是字符串的哈希码，而不是String对象的，用作字符串缓存
+    private int hash; // Default to 0
+    // 是否压缩字符串存储。如果禁用字符串压缩，则value中的字节始终以 UTF16 编码。 对于具有多种可能实现方式的方法，当禁用字符串压缩时，只会采用一种方式：UTF16
+    static final boolean COMPACT_STRINGS;
+```
+
+String类的核心构造器。
+
+```java
+    // 通过已有的字符串构造的是共享内容的字符串对象，但它是安全的，因为String是不可变类，
+    // 改变字符串意味着就成了另个对象。
+    public String(String original) {
+        this.value = original.value;
+        this.coder = original.coder;
+        this.hash = original.hash;
+    }
+
+    public String(int[] codePoints, int offset, int count) {
+        checkBoundsOffCount(offset, count, codePoints.length);
+        if (count == 0) {
+            this.value = "".value;
+            this.coder = "".coder;
+            return;
+        }
+        // 压缩处理
+        if (COMPACT_STRINGS) {
+            byte[] val = StringLatin1.toBytes(codePoints, offset, count);
+            if (val != null) {
+                this.coder = LATIN1;
+                this.value = val;
+                return;
+            }
+        }
+        this.coder = UTF16;
+        this.value = StringUTF16.toBytes(codePoints, offset, count);
+    }
+
+    public String(byte bytes[], int offset, int length, Charset charset) {
+        if (charset == null)
+            throw new NullPointerException("charset");
+        checkBoundsOffCount(offset, length, bytes.length);
+        // 字节数组数据必须解码才能识别。
+        StringCoding.Result ret =
+            StringCoding.decode(charset, bytes, offset, length);
+        this.value = ret.value;
+        this.coder = ret.coder;
+    }
+```
+
+在JDK 8中字符串数据是存储在char数组中，而在JDK 11中变成byte数组，其中仍是char数据。因为存储不同字符串的长度获取方法也改变了。
+
+```java
+    // JDK 8
     // The value is used for character storage.c
     private final char value[];
-```
 
-而在JDK 11中变成byte数组，其中仍是char数据。
-
-```java
+    // JDK 11
     // The value is used for character storage.
     private final byte[] value;
-```
 
-因为存储不同字符串的长度获取方法也改变了。
-
-```java
     // JDK 8
     public int length() {
         return value.length;
@@ -70,13 +120,22 @@ str1 == str3 // false
 
     // JDK 11
     public int length() {
-        // >> 相当于除运算
+        // >> 除运算
         return value.length >> coder();
     }
 ```
 
-### 常用方法源码分析
+获取不同编码方式指定字符位置使用不同的方式。
 
+```java
+    public char charAt(int index) {
+        if (isLatin1()) {
+            return StringLatin1.charAt(value, index);
+        } else {
+            return StringUTF16.charAt(value, index);
+        }
+    }
+```
 
 
 
