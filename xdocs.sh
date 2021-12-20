@@ -19,10 +19,10 @@ fi
 git add . && git status
 
 # 等待一会，方便终止push
-# sleep 5
-echo $msg
+ sleep 5
+
 # commit & push
-git commit -m "$msg"
-# git push $addr HEAD:$branch
+git commit -m "$msg" 
+git push "$addr HEAD:$branch"
 
 echo "OK."
