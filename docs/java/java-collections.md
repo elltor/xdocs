@@ -150,9 +150,46 @@ public interface Collection<E> extends Iterable<E> {
 
 ### ArrayList 源码分析
 
-ArrayList 是可调整大小的List实现，基于数组，允许所有元素，包括null。ArrayList与Vector的区别是它是非同步的，多线程下不安全。
+ArrayList 是可调整大小的List实现，基于数组，允许所有元素，包括null。ArrayList与Vector的区别是它是非同步的，多线程下不安全。通常使用ArrayList最好指定 `capacity` 以避免数据扩容后拷贝开销。
+
+ArrayList 成员变量。
+
+```java
+
+    /**
+     * 默认初始化容量，capacity扩容每次增加之前容量的一半
+     */
+    private static final int DEFAULT_CAPACITY = 10;
+
+    /**
+     * 用于空实例的共享空数组实例。
+     */
+    private static final Object[] EMPTY_ELEMENTDATA = {};
+
+    /**
+     * 默认共享的空数组标识，与上边的区别是首次
+     */
+    private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+
+    /**
+     * 实际上存储数据数组，初始时 == DEFAULTCAPACITY_EMPTY_ELEMENTDATA，
+     * 在第一次被调用时数组容量是 DEFAULT_CAPACITY。
+     * 
+     */
+    transient Object[] elementData; 
+
+    /**
+     * 当前存储大小，size <= capacity
+     */
+    private int size;
+```
 
 
+
+
+
+
+![ArrayList#add](https://oss.elltor.com/uploads/xdocs/2021/ArrayList_add_simple.png)
 
 
 
