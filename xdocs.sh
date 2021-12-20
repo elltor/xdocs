@@ -23,6 +23,6 @@ git add . && git status
 
 # commit & push
 git commit -m "$msg" 
-git push "$addr HEAD:$branch"
+git push "$addr" "HEAD:$branch"
 
 echo "OK."
