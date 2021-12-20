@@ -12,7 +12,7 @@ Java集合工具类具有很多特点，比如：通用的API、自动扩所容�
 - LinkedList 高效插入删除的有序List，双向链表，使用node节点存储数据，同时它又是个复合数据结构，具有Queue的特性
 - ArrayDeque 用循环数组实现的双端队列
 - HashSet 一种没有元素的无序集合
-- TreeSet 有序的集合
+- TreeSet 有序集合，插入元素有序
 - LinkedHashSet 能记录插入顺序的集合
 - PriorityQueue 优先队级列
 - HashMap 存储键-值关系数据，与此类似的还有遗留的类 HashTable
@@ -27,10 +27,65 @@ Java集合工具类具有很多特点，比如：通用的API、自动扩所容�
 
 排序首先要实现Comparable接口，或者使用comparator的实现类，然后调用 `Collections#sort` 方法即可。
 
-
 ### 集合遍历
 
 集合的遍历可以通过for、for简写（语法糖）、iterator、forEach遍历。
+
+```java
+// 样例
+ArrayList<Integer> list = new ArrayList<>();
+list.add(1);
+list.add(2);
+list.add(3);
+
+// 1
+int len = list.size();
+for(int i=0; i < len; i++){
+    System.out.println(list.get(i));
+}
+
+// 2 -- 语法糖 最终会转换成迭代器遍历
+for(Integer i : list){
+    System.out.println(i);
+}
+
+// 3 
+Iterator it = list.iterator();
+while(it.hasNext()){
+    int i = it.next();
+    System.out.println(i);
+}
+
+// 4 JDK8+
+list.forEach(System.out::println);
+list.forEach(i -> System.out.println(i));
+```
+
+
+### HashMap、HashTable、ConcurrentHashMap的取别
+
+- 相同点
+  - 都实现了Map接口，功能相同
+  - 都是用用来存储K-V形式数据
+  - 都具有扩容机制
+- 不同点
+  - 从线程安全的角度
+    - HashMap 方法没有加锁，线程不安全不能在多线程下使用
+    - HashTable、ConcurrentHashMap 加锁了，线程安全
+      - HashTable 对增改（put）删除（remove）等方法使用 `synchronized` 加锁
+      - 而ConcurrentHashMap使用无锁（CAS）的方式进行加锁
+
+### String、StringBuilder、StringBuffer区别
+
+- String就是常见的字符串，有字符串常量池，String是不可变对象，连接（+）修改（replace、substring）都要创建新String对象。
+- StringBuilder是可追加的字符串，即可变字符串，线程不安全。
+- StringBuffer与StringBuilder唯一的区别是方法上使用 `synchronized` 进行同步，线程安全。
+
+使用选择。如果字符串不变更或者少数变更最好使用String；如果在单线程中频繁更新字符串最好使用StringBuilder；如果是多线程中频繁更新字符串传就用StringBuffer。
+
+关于“+”号拼接字符串。多数人认为Java类似于C++进行运算符重载，其实不是这样的，JVM在遇到“+”进行拼接的都转换成了 `StringBuilder#append` 方式，可以使用Jad反编译工具进行验证。
+
+
 
 
 ## 源码分析
@@ -257,6 +312,11 @@ ArrayList 成员变量。
 ```
 
 #### HashMap
+
+
+
+
+
 
 底层数据结构：数组链表+红黑树
 
