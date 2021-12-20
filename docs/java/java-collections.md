@@ -23,6 +23,11 @@ Java集合工具类具有很多特点，比如：通用的API、自动扩所容�
 
 通常选用基于我们需要处理的数据的特点来确定的。如果只是简单存储一组数据，如几个用户的信息，这时选用ArrayList是比较合适的，如果数据频繁添加、删除那选用LinkedList是比较合适的；如果想存储一组数据且不希望重复，那选用Set集合合适的；如果希望添加插入的数据能够有顺序，那选择TreeSet是比较合适的，当然TreeMap也可以。
 
+### 集合排序
+
+排序首先要实现Comparable接口，或者使用comparator的实现类，然后调用 `Collections#sort` 方法即可。
+
+
 ## 源码分析
 
 ### Collection接口
@@ -186,10 +191,19 @@ ArrayList 成员变量。
 
 
 
-
-
-
 ![ArrayList#add](https://oss.elltor.com/uploads/xdocs/2021/ArrayList_add_simple.png)
+
+添加一个元素的过程：
+
+1. 调用add方法
+2. 判断是否需要进行扩容（grow）
+   1. 如果size等于存储数组的length，则进行扩容
+   2. 新容量 = 旧容量 + 旧容量/2，每次增加原来的1/2
+   3. 拷贝旧数组内容到新数组然后返回
+3. 在新数组存放元素
+4. size加1
+
+
 
 
 
