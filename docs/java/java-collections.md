@@ -28,11 +28,16 @@ Java集合工具类具有很多特点，比如：通用的API、自动扩所容�
 排序首先要实现Comparable接口，或者使用comparator的实现类，然后调用 `Collections#sort` 方法即可。
 
 
+### 集合遍历
+
+集合的遍历可以通过for、for简写（语法糖）、iterator、forEach遍历。
+
+
 ## 源码分析
 
 ### Collection接口
 
-Collection 集合层次结构中的根接口，一个集合代表一组对象，称为它的元素，一些集合允许重复元素，而另一些则不允许，抑或有些是有序的，有些是无序的。接下来我们来看一下它的接口方法定义。
+Collection 集合层次结构中的根接口，一个集合代表一组对象，称为它的元素，一些集合允许重复元素，而另一些则不允许，有些是有序的，有些是无序的。掌握的这个接口就相当于掌握的集合的多数常用方法，接下来我们来看一下它的接口方法定义。
 
 ```java
 public interface Collection<E> extends Iterable<E> {
@@ -203,10 +208,53 @@ ArrayList 成员变量。
 3. 在新数组存放元素
 4. size加1
 
+删除列表的元素，通过索引删除效率更高。
 
+```java
+    public boolean remove(Object o) {
+        final Object[] es = elementData;
+        final int size = this.size;
+        int i = 0;
+        found: {
+            // 通过遍历数组寻找相等的对象
+            if (o == null) { 
+                for (; i < size; i++)
+                    if (es[i] == null)
+                        break found;
+            } else {
+                for (; i < size; i++)
+                    if (o.equals(es[i]))
+                        break found;
+            }
+            return false;
+        }
+        // 进行删除
+        fastRemove(es, i);
+        return true;
+    }
 
+    public E remove(int index) {
+        // 检查索引是否越界
+        Objects.checkIndex(index, size);
+        final Object[] es = elementData;
 
+        @SuppressWarnings("unchecked") E oldValue = (E) es[index];
+        // 快速移出元素
+        fastRemove(es, index);
 
+        return oldValue;
+    }
+
+    // 快速删除元素，并不重新创建数组
+    // 把要删除元素之后的元素向前移动一格，size减1
+    private void fastRemove(Object[] es, int i) {
+        modCount++;
+        final int newSize;
+        if ((newSize = size - 1) > i)
+            System.arraycopy(es, i + 1, es, i, newSize - i);
+        es[size = newSize] = null;
+    }
+```
 
 #### HashMap
 
