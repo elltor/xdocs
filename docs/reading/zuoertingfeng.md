@@ -88,6 +88,8 @@
 * 强调实践，学以致用。
 * Lead by Example。永远在编程。不写代码，你就对技术细节不敏感，就无法做出可以实践的技术决策方案。
 
+Google评分卡：
+
 ```text
 0. You are unfamiliar with the subject area.
     - 你对领域不了解。

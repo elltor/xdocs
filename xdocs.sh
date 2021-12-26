@@ -19,7 +19,7 @@ fi
 git add . && git status
 
 # 等待一会，方便终止push
-sleep 5
+sleep 3
 
 # commit & push
 git commit -m "$msg" 
