@@ -85,9 +85,6 @@ list.forEach(i -> System.out.println(i));
 
 关于“+”号拼接字符串。多数人认为Java类似于C++进行运算符重载，其实不是这样的，JVM在遇到“+”进行拼接的都转换成了 `StringBuilder#append` 方式，可以使用Jad反编译工具进行验证。
 
-
-
-
 ## 源码分析
 
 ### Collection接口
@@ -248,8 +245,6 @@ ArrayList 成员变量。
      */
     private int size;
 ```
-
-
 
 ![ArrayList#add](https://oss.elltor.com/uploads/xdocs/2021/ArrayList_add_simple.png)
 
@@ -726,5 +721,6 @@ public class HashMap<K,V> extends AbstractMap<K,V> implements Map<K,V>, Cloneabl
     }
 }
 ```
+
 
 (完)

@@ -44,7 +44,7 @@ str1 == str3 // false
 
 分析，字符串是不可变对象，在进行变更操作（e.g. substring、replace、concat）都会创建新字符串对象，因此JVM进行了优化，如果字符串常量池中国呢存在就返回不在创建，不存在创建在返回引用，如果是创建字符串对象，字符串对象变量必然是新的，其中的数据载体（byte[] value)可能是在常量池中。
 
-### 源码分析
+### String源码分析
 
 String类的成员变量，从中可以窥见一斑。
 
@@ -168,13 +168,13 @@ String类的核心构造器。
 
 ### 类结构
 
-![](https://oss.elltor.com/uploads/xdocs/2021/StringBuilder.png)
+![StringBuilder](https://oss.elltor.com/uploads/xdocs/2021/StringBuilder.png)
 
-![](https://oss.elltor.com/uploads/xdocs/2021/StringBuffer.png)
+![StringBuffer](https://oss.elltor.com/uploads/xdocs/2021/StringBuffer.png)
 
 从类结构看二者继承实现结构相同，其中真正完成追加（append）操作的是 `AbstractStringBuilder` 类。
 
-### 源码分析
+### StringBuilder、StringBuffer源码分析
 
 先看StringBuilder常用的方法。
 
