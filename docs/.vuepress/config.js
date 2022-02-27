@@ -32,7 +32,7 @@ const sliderConfig = [
 module.exports = {
   base: '/',
   home: '/',
-  title: "xDocs",
+  title: "xdocs",
   description: 'Write the code. Change the World.',
   // 默认主题配置
   themeConfig: {
