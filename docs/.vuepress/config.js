@@ -1,42 +1,16 @@
-// 侧边栏配置
-const sliderConfig = [
-  {
-    text: '首页',
-    link: '/',
-  },
-  {
-    text: 'Java 总结',
-    link: '/java/',
-    children: [
-      '/java/java-1.md',
-      '/java/java-2.md',
-    ]
-  },
-  {
-    text: 'Netty 总结',
-    link: '/netty/',
-    children: [
-      '/netty/netty-series-1.md',
-      '/netty/netty-series-2.md',
-      '/netty/netty-series-3.md',
-      '/netty/netty-series-4.md',
-      '/netty/netty-series-5.md',
-      '/netty/netty-series-6.md',
-      '/netty/netty-series-7.md',
-    ]
-  }
-]
-
+const { default: searchPlugin } = require("@vuepress/plugin-search")
+const { defaultTheme } = require("vuepress")
 
 // 系统配置
 module.exports = {
   base: '/',
   home: '/',
+  lang: 'zh-CN',
   title: "XDOCS",
   description: 'Write the code. Change the World.',
   // 默认主题配置
-  themeConfig: {
-    logo: '/imgs/xdocs_logo.png',
+  theme: defaultTheme({
+    /* logo: '/imgs/xdocs_logo.png', */
     // 最后更新时间 开启&文案
     lastUpdated: true,
     lastUpdatedText: '上次更新',
@@ -71,17 +45,17 @@ module.exports = {
     ],
     // 导航栏
     navbar: [
-      { text: '首页', link: '/' },
-      { text: 'My Blog', link: 'https://elltor.com' },
-      { text: 'GitHub', link: 'https://github.com/elltor/xdocs' },
+      /* { text: '首页', link: '/' }, */
+      /* { text: 'GitHub', link: 'https://github.com/elltor/xdocs' }, */
+      /* { text: 'Blog', link: 'https://elltor.com' }, */
     ],
     // 侧边栏 显示深度&主页侧边栏
-    sidebarDepth: 0,
-    sidebar: sliderConfig,
+    sidebarDepth: 3,
+    sidebar: 'auto',
     // 源码仓库
     // 如果你按照 `organization/repository` 的格式设置它，会将它作为一个 GitHub 仓库
-    //repo: 'elltor/xdocs',
-    //repoLabel: 'GitHub',
+    repo: 'elltor/xdocs',
+    repoLabel: 'GitHub',
     // 在GitHub上编辑功能和文档源码仓库信息 
     editLink: true,
     editLinkText: '在GitHub编辑此页',
@@ -89,10 +63,13 @@ module.exports = {
     docsRepo: 'https://github.com/elltor/xdocs',
     docsBranch: 'main',
     docsDir: 'docs',
-  },
+  }),
   // 开启的插件
   plugins: [
-    ['@vuepress/plugin-search']
+    searchPlugin({
+      // 排除首页
+      isSearchable: (page) => page.path !== '/',
+    }),
   ],
   // markdown配置
   markdown: {
@@ -101,3 +78,23 @@ module.exports = {
     }
   }
 }
+
+// 全局侧边栏配置
+/* const sliderbarConfig = [
+  {
+    text: '首页',
+    link: '/',
+  },
+  {
+    text: 'Java 总结',
+    link: '/java/',
+    children: [
+      '/java/java-1.md',
+      '/java/java-2.md',
+    ]
+  },
+  {
+    text: 'Netty 网络通信框架',
+    link: '/netty/',
+  }
+] */
